@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<actions>
+    <action path="/loginAction" class="venus.actions.LoginAction">
+        <forward name="success" path="pages/secured/welcome.jsp" />
+        <forward name="failed" path="pages/login.jsp" />
+    </action>
+    <action path="/logoutAction" class="venus.actions.LogOutAction">
+        <forward name="success" path="index.jsp" />
+    </action>
+</actions>
