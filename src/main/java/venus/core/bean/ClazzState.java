@@ -39,13 +39,13 @@ public class ClazzState {
 		return autoWiredfieldMapping;
 	}
 
-	public void addAutoWiredFiledMapping(String field, String fieldClass) {
-		autoWiredfieldMapping.put(field, fieldClass);
+	public void addAutoWiredFiledMapping(String fieldName, String fieldClass) {
+		autoWiredfieldMapping.put(fieldName, fieldClass);
 	}
 
-	public void removeAutoWiredFiledMapping(String field) {
-		if (autoWiredfieldMapping.containsKey(field)) {
-			autoWiredfieldMapping.remove(field);
+	public void removeAutoWiredFiledMapping(String fieldName) {
+		if (autoWiredfieldMapping.containsKey(fieldName)) {
+			autoWiredfieldMapping.remove(fieldName);
 		}
 	}
 

@@ -19,9 +19,9 @@ import venus.core.injected.Autowired;
 import venus.core.injected.Controller;
 import venus.core.injected.Service;
 
-class ComponentScanner {
+class ComponentScan {
 
-	private static Logger log = Logger.getLogger(ComponentScanner.class);
+	private static Logger log = Logger.getLogger(ComponentScan.class);
 
 	private ClassLoader classLoader;
 	private Class<Controller> controllerAnnotation = Controller.class;
@@ -36,7 +36,7 @@ class ComponentScanner {
 	 * 
 	 * @param basePackage
 	 */
-	public ComponentScanner(String basePackage) {
+	ComponentScan(String basePackage) {
 
 		try {
 			classLoader = Thread.currentThread().getContextClassLoader();
@@ -76,25 +76,25 @@ class ComponentScanner {
 				} else if (loadClass.isAnnotationPresent(serviceAnnotation)) {
 
 					log.debug("class[" + loadClass.getName() + "] register with annotation[" + serviceAnnotation.getName() + "]");
-					ClazzState clazzState = createClazzState("", loadClass);
+					ClazzState clazzState = createClazzState(firstLetterLowerCase(loadClass.getSimpleName()), loadClass);
 					serviceStateList.add(clazzState);
 				}
 			}
 		}
 	}
 
-	private String lowerCaseFirstLetter(String str) {
-		return StringUtils.isBlank(str) ? str : Character.toString(str.charAt(0)).toLowerCase() + str.substring(1);
+	private String firstLetterLowerCase(String str) {
+		return StringHelper.firstLetterLowerCase(str);
 	}
 
 	private ClazzState createClazzState(String name, Class<?> loadClass) {
 
-		String idName = StringUtils.isNotBlank(name) ? name : lowerCaseFirstLetter(loadClass.getSimpleName());
+		String idName = StringUtils.isNotBlank(name) ? name : firstLetterLowerCase(loadClass.getSimpleName());
 		ClazzState clazzState = new ClazzState(idName, loadClass.getName());
 		Field[] fields = loadClass.getDeclaredFields();
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(autoWiredAnnotation)) {
-				clazzState.addAutoWiredFiledMapping(lowerCaseFirstLetter(field.getType().getSimpleName()), field.getType().getName());
+				clazzState.addAutoWiredFiledMapping(field.getName(), field.getType().getName());
 			}
 		}
 		return clazzState;
