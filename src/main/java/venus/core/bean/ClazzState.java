@@ -1,6 +1,6 @@
 package venus.core.bean;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -9,7 +9,7 @@ public class ClazzState {
 
 	private String urlName;
 	private String loadClassName;
-	private Map<String, String> autoWiredfieldMapping = new HashMap<String, String>();
+	private Map<String, String> autoWiredfieldMapping = new LinkedHashMap<String, String>();
 
 	public ClazzState() {
 	}
@@ -35,9 +35,12 @@ public class ClazzState {
 		this.loadClassName = loadClassName;
 	}
 
+	public Map<String, String> getAutoWiredfieldMapping() {
+		return autoWiredfieldMapping;
+	}
+
 	public void addAutoWiredFiledMapping(String field, String fieldClass) {
 		autoWiredfieldMapping.put(field, fieldClass);
-
 	}
 
 	public void removeAutoWiredFiledMapping(String field) {
