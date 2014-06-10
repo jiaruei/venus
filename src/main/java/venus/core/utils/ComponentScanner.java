@@ -19,7 +19,7 @@ import venus.core.injected.Autowired;
 import venus.core.injected.Controller;
 import venus.core.injected.Service;
 
-public class ComponentScanner {
+class ComponentScanner {
 
 	private static Logger log = Logger.getLogger(ComponentScanner.class);
 
@@ -49,7 +49,7 @@ public class ComponentScanner {
 
 		} catch (Exception e) {
 			log.error(e, e);
-			throw new RuntimeException("parser package error :" + e.getMessage());
+			throw new RuntimeException("scanning package failed :" + e.getMessage());
 		}
 	}
 
@@ -69,14 +69,14 @@ public class ComponentScanner {
 
 				if (loadClass.isAnnotationPresent(controllerAnnotation)) {
 
-					log.debug("class[" + loadClass.getName() + "] with annotation[" + controllerAnnotation + "]");
+					log.debug("class[" + loadClass.getName() + "] register with annotation[" + controllerAnnotation.getName() + "]");
 					ClazzState clazzState = createClazzState(loadClass.getAnnotation(controllerAnnotation).name(), loadClass);
 					controllerStateList.add(clazzState);
 
 				} else if (loadClass.isAnnotationPresent(serviceAnnotation)) {
 
-					log.debug("class[" + loadClass.getName() + "] with annotation[" + serviceAnnotation + "]");
-					ClazzState clazzState = createClazzState(loadClass.getAnnotation(serviceAnnotation).name(), loadClass);
+					log.debug("class[" + loadClass.getName() + "] register with annotation[" + serviceAnnotation.getName() + "]");
+					ClazzState clazzState = createClazzState("", loadClass);
 					serviceStateList.add(clazzState);
 				}
 			}
@@ -94,12 +94,18 @@ public class ComponentScanner {
 		Field[] fields = loadClass.getDeclaredFields();
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(autoWiredAnnotation)) {
-				String refName = field.getAnnotation(autoWiredAnnotation).name();
-				refName = StringUtils.isNotBlank(refName) ? refName : lowerCaseFirstLetter(field.getType().getSimpleName());
-				clazzState.addAutoWiredFiledMapping(refName, field.getType().getName());
+				clazzState.addAutoWiredFiledMapping(lowerCaseFirstLetter(field.getType().getSimpleName()), field.getType().getName());
 			}
 		}
 		return clazzState;
+	}
+
+	List<ClazzState> getServiceClazzStateList() {
+		return serviceStateList;
+	}
+
+	List<ClazzState> getControllerStateList() {
+		return controllerStateList;
 	}
 
 	/**
