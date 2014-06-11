@@ -1,6 +1,5 @@
 package venus.core.utils;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.log4j.Logger;
 
 import venus.core.bean.ClazzState;
-import venus.core.injected.Autowired;
 
 public class ControllerFactory {
 
@@ -59,7 +57,7 @@ public class ControllerFactory {
 
 	public Object getMappingController(String url) {
 
-		Object controllerObj;
+		Object controllerObj = null;
 
 		ClazzState controller = controllerMap.get(url);
 		if (controller == null) {
@@ -68,69 +66,66 @@ public class ControllerFactory {
 
 		try {
 			controllerObj = classLoader.loadClass(controller.getLoadClassName()).newInstance();
-
 			// injected if there are autoWired fields
 			Map<String, String> autoWiredFields = controller.getAutoWiredfieldMapping();
 
 			for (String fieldName : autoWiredFields.keySet()) {
-				String fieldTypeClassName = autoWiredFields.get(fieldName);
-				String simpleName = getFistLetterLowerCaseClassName(fieldTypeClassName);
-				Object fieldObj;
+				String fieldType = autoWiredFields.get(fieldName);
+				String simpleFieldName = getFirstLetterLowerCaseClassName(fieldType);
+				Object serviceObj;
 				// check the autoWired field had registered
-				if (!serviceMap.containsKey(simpleName)) {
-					throw new RuntimeException("class[" + controller.getLoadClassName() + "] don't register mapping class[" + fieldTypeClassName + "]");
+				if (!serviceMap.containsKey(simpleFieldName)) {
+					throw new RuntimeException("class[" + controller.getLoadClassName() + "] don't register mapping class[" + fieldType + "]");
 				}
 
-				fieldObj = classLoader.loadClass(fieldTypeClassName).newInstance();
-				FieldUtils.writeDeclaredField(controllerObj, fieldName, fieldObj, true);
-
+				serviceObj = classLoader.loadClass(fieldType).newInstance();
+				FieldUtils.writeDeclaredField(controllerObj, fieldName, serviceObj, true);
+				chainServiceWired(serviceObj);
 			}
-
+			return controllerObj;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 
-		return controllerObj;
 	}
 
-	private String getFistLetterLowerCaseClassName(String fieldTypeClassName) {
+	private void chainServiceWired(Object hostObj) {
+
+		String simpleName = getFirstLetterLowerCaseClassName(hostObj.getClass().getSimpleName());
+		log.debug("hostObj :" + simpleName);
+		ClazzState clazzState = serviceMap.get(simpleName);
+
+		try {
+			// injected if there are autoWired fields
+			Map<String, String> autoWiredFields = clazzState.getAutoWiredfieldMapping();
+
+			for (String fieldName : autoWiredFields.keySet()) {
+				String fieldType = autoWiredFields.get(fieldName);
+				Object serviceObj;
+				// check the autoWired field had registered
+				String refServiceName = getFirstLetterLowerCaseClassName(fieldType);
+				if (!serviceMap.containsKey(refServiceName)) {
+					throw new RuntimeException("class[" + clazzState.getLoadClassName() + "] don't register mapping class[" + fieldType + "]");
+				}
+
+				log.debug("refServiceName :" + refServiceName);
+				serviceObj = classLoader.loadClass(fieldType).newInstance();
+				FieldUtils.writeDeclaredField(hostObj, fieldName, serviceObj, true);
+				//
+				chainServiceWired(serviceObj);
+			}
+
+		} catch (Exception e) {
+			log.error(e, e);
+			throw new RuntimeException(e);
+		}
+
+	}
+
+	private String getFirstLetterLowerCaseClassName(String fieldTypeClassName) {
 		int index = StringUtils.lastIndexOf(fieldTypeClassName, ".");
 		String simpleClassName = StringUtils.substring(fieldTypeClassName, index + 1);
 		return StringHelper.firstLetterLowerCase(simpleClassName);
 	}
 
-	private void recursiveServiceAutoWired(Object fieldObj) throws Exception {
-
-		Class clazz = fieldObj.getClass();
-		Field[] declaredFields = clazz.getDeclaredFields();
-		for (Field field : declaredFields) {
-			if (field.isAnnotationPresent(Autowired.class)) {
-				classLoader.loadClass(field.getType().getName());
-			} else {
-
-			}
-		}
-		serviceMap.get(componentScan);
-	}
-
-	public static void main(String[] args) {
-
-		try {
-
-			Class<?> clazz = Class.forName("venus.core.bean.ClazzState");
-			Field[] declaredFields = clazz.getDeclaredFields();
-			for (Field field : declaredFields) {
-				System.out.println(field.getType().getName());
-				System.out.println(field.getName());
-			}
-			Object obj = clazz.newInstance();
-
-			FieldUtils.writeDeclaredField(obj, "urlName", "/loginController", true);
-			String val = FieldUtils.readField(obj, "urlName", true).toString();
-			System.out.println(val);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
 }

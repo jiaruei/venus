@@ -19,6 +19,11 @@ import venus.core.injected.Autowired;
 import venus.core.injected.Controller;
 import venus.core.injected.Service;
 
+/**
+ * 
+ * @author jerrywu
+ * 
+ */
 class ComponentScan {
 
 	private static Logger log = Logger.getLogger(ComponentScan.class);
@@ -92,6 +97,7 @@ class ComponentScan {
 		String idName = StringUtils.isNotBlank(name) ? name : firstLetterLowerCase(loadClass.getSimpleName());
 		ClazzState clazzState = new ClazzState(idName, loadClass.getName());
 		Field[] fields = loadClass.getDeclaredFields();
+		// check class had dependency properties
 		for (Field field : fields) {
 			if (field.isAnnotationPresent(autoWiredAnnotation)) {
 				clazzState.addAutoWiredFiledMapping(field.getName(), field.getType().getName());
