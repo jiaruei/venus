@@ -5,10 +5,23 @@ import java.util.Map;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * <pre>
+ * 	record all class that register components
+ * </pre>
+ * 
+ * @author jerrywu
+ * 
+ */
 public class ClazzState {
 
+	// controller url or service simpleName
 	private String urlName;
+
+	// component classesFullName
 	private String loadClassName;
+
+	// annotation dependency injected
 	private Map<String, String> autoWiredfieldMapping = new LinkedHashMap<String, String>();
 
 	public ClazzState() {

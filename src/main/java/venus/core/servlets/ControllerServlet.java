@@ -14,6 +14,11 @@ import org.apache.log4j.Logger;
 
 import venus.core.utils.ControllerFactory;
 
+/**
+ * 
+ * @author jerrywu
+ * @since 2014/06/14
+ */
 public class ControllerServlet extends HttpServlet {
 
 	private static Logger log = Logger.getLogger(ControllerServlet.class);
