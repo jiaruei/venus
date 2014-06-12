@@ -5,9 +5,8 @@
 
   <display-name>venus</display-name>
     
-  
   <listener>
-    <listener-class>venus.core.ContextListener</listener-class>
+    <listener-class>venus.core.listener.ContextListener</listener-class>
   </listener>
   
   <filter>
