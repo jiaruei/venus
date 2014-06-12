@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import venus.core.exception.NoSuchViewExcpeiton;
+import venus.core.exception.NoSuchViewExcepiton;
 
 /**
  * 
@@ -64,13 +64,13 @@ public class ViewHandler {
 		return null;
 	}
 
-	public void router(Object responseType, HttpServletRequest request, HttpServletResponse response) throws NoSuchViewExcpeiton, ServletException {
+	public void router(Object responseType, HttpServletRequest request, HttpServletResponse response) throws NoSuchViewExcepiton, ServletException {
 
 		Class<? extends Views> viewClass = getMappingView(responseType);
 		if (viewClass == null) {
 			String className = responseType.getClass().getName();
 			log.error("ViewHandler class Not Found By " + className);
-			throw new NoSuchViewExcpeiton("ViewHandler class Not Found By " + className);
+			throw new NoSuchViewExcepiton("ViewHandler class Not Found By " + className);
 		}
 
 		Class<?> argumentsType = viewClass.getDeclaredFields()[0].getType();

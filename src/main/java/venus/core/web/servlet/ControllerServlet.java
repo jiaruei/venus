@@ -14,7 +14,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.log4j.Logger;
 
 import venus.core.context.ControllerFactory;
-import venus.core.exception.NoSuchViewExcpeiton;
+import venus.core.exception.NoSuchViewExcepiton;
 import venus.core.web.servlet.view.ViewHandler;
 
 /**
@@ -65,7 +65,7 @@ public class ControllerServlet extends HttpServlet {
 			if (view != null) {
 				viewHandler.router(view, req, resp);
 			}
-		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | NoSuchViewExcpeiton e) {
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | NoSuchViewExcepiton e) {
 			log.error(e, e);
 			throw new ServletException(e);
 		}
