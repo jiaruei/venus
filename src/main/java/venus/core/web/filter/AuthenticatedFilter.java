@@ -18,6 +18,11 @@ import org.apache.log4j.Logger;
 
 import venus.core.Constants;
 
+/**
+ * 
+ * @author jerrywu
+ * 
+ */
 public class AuthenticatedFilter implements Filter {
 
 	private static Logger log = Logger.getLogger(AuthenticatedFilter.class);
@@ -25,6 +30,8 @@ public class AuthenticatedFilter implements Filter {
 	private static final String PAGE_FOLDER = "pages";
 
 	private static final String PREFIX_SECURED = "secured";
+
+	private static boolean STOP_AUTHENTICATE = false;
 
 	private ServletContext context;
 
@@ -36,15 +43,21 @@ public class AuthenticatedFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
-
-		String actionPath = StringUtils.remove(req.getRequestURI(), req.getContextPath());
-		if (isSecuredResouce(actionPath) && !isAuthenticated(req)) {
-
-			res.sendRedirect(req.getContextPath() + "/pages/login.jsp");
-		} else {
+		if (STOP_AUTHENTICATE) {
+			log.info("stop authenticate ...");
 			chain.doFilter(request, response);
+		} else {
+			HttpServletRequest req = (HttpServletRequest) request;
+			HttpServletResponse res = (HttpServletResponse) response;
+
+			String actionPath = StringUtils.remove(req.getRequestURI(), req.getContextPath());
+			if (isSecuredResouce(actionPath) && !isAuthenticated(req)) {
+
+				res.sendRedirect(req.getContextPath() + "/pages/login.jsp");
+			} else {
+				chain.doFilter(request, response);
+			}
+
 		}
 	}
 
@@ -72,6 +85,11 @@ public class AuthenticatedFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig config) throws ServletException {
+
+		String isAuthenticated = config.getInitParameter("stop_authenticate");
+		if (StringUtils.isNotBlank(isAuthenticated)) {
+			STOP_AUTHENTICATE = Boolean.valueOf(isAuthenticated);
+		}
 		context = config.getServletContext();
 	}
 

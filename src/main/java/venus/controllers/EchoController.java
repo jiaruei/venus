@@ -17,11 +17,12 @@ public class EchoController {
 	@Autowired
 	private Echo1Service loginService;
 
-	public Object execute(HttpServletRequest req, HttpServletResponse resp) {
+	public String execute(HttpServletRequest req, HttpServletResponse resp) {
 		log.debug(this.getClass().getName() + " ....");
 		log.debug("echo paramter [" + req.getParameter("echo") + "]");
 
 		loginService.echo();
-		return null;
+
+		return "/pages/secured/welcome.jsp";
 	}
 }

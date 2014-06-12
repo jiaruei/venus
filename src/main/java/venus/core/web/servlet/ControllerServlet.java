@@ -3,6 +3,7 @@ package venus.core.web.servlet;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,8 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.log4j.Logger;
 
 import venus.core.context.ControllerFactory;
+import venus.core.exception.NoSuchViewExcpeiton;
+import venus.core.web.servlet.view.ViewHandler;
 
 /**
  * 
@@ -23,7 +26,20 @@ public class ControllerServlet extends HttpServlet {
 
 	private static Logger log = Logger.getLogger(ControllerServlet.class);
 
-	private ControllerFactory factory = ControllerFactory.getInstance();
+	private ControllerFactory controllerFactory = ControllerFactory.getInstance();
+	private ViewHandler viewHandler = ViewHandler.getInstance();
+
+	// initial view handler
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		// TODO Auto-generated method stub
+		String customViewPath = config.getInitParameter("customView");
+		if (StringUtils.isNotBlank(customViewPath)) {
+			// not yet
+			// viewHandler.addView(customViewPath, null);
+		}
+	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -43,11 +59,13 @@ public class ControllerServlet extends HttpServlet {
 		String urlName = splits[0];
 		String method = splits[1];
 
-		Object mappingController = factory.getMappingController(urlName);
+		Object mappingController = controllerFactory.getMappingController(urlName);
 		try {
 			Object view = MethodUtils.invokeMethod(mappingController, method, req, resp);
-			req.getRequestDispatcher("").forward(req, resp);
-		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			if (view != null) {
+				viewHandler.router(view, req, resp);
+			}
+		} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | NoSuchViewExcpeiton e) {
 			log.error(e, e);
 			throw new ServletException(e);
 		}
