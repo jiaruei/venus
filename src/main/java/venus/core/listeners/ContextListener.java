@@ -6,7 +6,7 @@ import javax.servlet.ServletContextListener;
 
 import org.apache.log4j.Logger;
 
-import venus.core.utils.ControllerFactory;
+import venus.core.context.ControllerFactory;
 
 public class ContextListener implements ServletContextListener {
 

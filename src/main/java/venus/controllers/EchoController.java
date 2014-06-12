@@ -9,7 +9,7 @@ import venus.core.injected.Autowired;
 import venus.core.injected.Controller;
 import venus.services.Echo1Service;
 
-@Controller
+@Controller(name = "echo")
 public class EchoController {
 
 	private static Logger log = Logger.getLogger(EchoController.class);
@@ -18,7 +18,9 @@ public class EchoController {
 	private Echo1Service loginService;
 
 	public Object execute(HttpServletRequest req, HttpServletResponse resp) {
-		log.debug("loginController ...." + req.getParameter("test"));
+		log.debug(this.getClass().getName() + " ....");
+		log.debug("echo paramter" + req.getParameter("echo"));
+
 		loginService.echo();
 		return null;
 	}
