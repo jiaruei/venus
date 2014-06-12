@@ -19,7 +19,7 @@ public class EchoController {
 
 	public Object execute(HttpServletRequest req, HttpServletResponse resp) {
 		log.debug(this.getClass().getName() + " ....");
-		log.debug("echo paramter" + req.getParameter("echo"));
+		log.debug("echo paramter [" + req.getParameter("echo") + "]");
 
 		loginService.echo();
 		return null;

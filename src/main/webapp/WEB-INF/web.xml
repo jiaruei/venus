@@ -45,7 +45,7 @@
   <filter>
     <display-name>authenticatedFilter</display-name>
     <filter-name>authenticatedFilter</filter-name>
-    <filter-class>venus.core.filters.AuthenticatedFilter</filter-class>
+    <filter-class>venus.core.web.filter.AuthenticatedFilter</filter-class>
   </filter>
 
   <filter-mapping>
