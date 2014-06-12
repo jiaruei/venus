@@ -5,8 +5,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
-import venus.Constants;
 import venus.core.Action;
+import venus.core.Constants;
 import venus.core.LoginUser;
 
 public class LoginAction implements Action {

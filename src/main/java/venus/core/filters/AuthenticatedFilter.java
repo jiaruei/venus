@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import venus.Constants;
+import venus.core.Constants;
 
 public class AuthenticatedFilter implements Filter {
 

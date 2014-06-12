@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import venus.core.Action;
-import venus.utils.ActionHelper;
+import venus.core.ActionHelper;
 
 public class ActionServlet extends HttpServlet {
 
