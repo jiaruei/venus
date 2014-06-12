@@ -6,12 +6,12 @@
   <display-name>venus</display-name>
     
   <listener>
-    <listener-class>venus.core.listener.ContextListener</listener-class>
+    <listener-class>venus.core.web.listener.ContextListener</listener-class>
   </listener>
   
   <filter>
     <filter-name>setCharacterEncoding</filter-name>
-    <filter-class>venus.core.filters.SetCharacterEncodingFilter</filter-class>
+    <filter-class>venus.core.web.filter.SetCharacterEncodingFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>setCharacterEncoding</filter-name>
@@ -20,7 +20,7 @@
 
   <servlet>
     <servlet-name>action</servlet-name>
-    <servlet-class>venus.core.servlets.ControllerServlet</servlet-class>
+    <servlet-class>venus.core.web.servlet.ControllerServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>action</servlet-name>
@@ -29,7 +29,7 @@
     <!-- 
   <servlet>
     <servlet-name>action</servlet-name>
-    <servlet-class>venus.core.servlets.ActionServlet</servlet-class>
+    <servlet-class>venus.core.web.servlet.ActionServlet</servlet-class>
     <init-param>
       <param-name>config</param-name>
       <param-value>/WEB-INF/classes/actions.xml</param-value>
